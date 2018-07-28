@@ -31,7 +31,11 @@ describe('String Calculator', () => {
         expect(calculate('20/5')).to.be.equal(4)
     })
 
-    it('should divide and add two numbers', () => {
+    it('should divide two numbers and then add a number', () => {
         expect(calculate('20/5+4')).to.be.equal(8)
+    })
+
+    it('should divide numbers and then perform addition', () => {
+        expect(calculate('20/5+4/2')).to.be.equal(6)
     })
 })

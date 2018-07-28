@@ -1,39 +1,37 @@
-import { curry } from 'lodash'
+import { curry } from 'lodash';
 
 const calc = curry((delimeter, combiner, str) => str.split(delimeter)
     .map((val) => parseInt((val || '0')) )
-    .reduce(combiner))
+    .reduce(combiner));
 
-const extract = (str) => str.match(/[\d]+\/[\d]+/g)
+const add = calc(/(?=\+|-)/, (acc, val) => val + acc);
 
-const add = calc(/(?=\+|-)/, (acc, val) => val + acc)
+const multiply = calc('*', (acc, val) => acc * val);
 
-const multiply = calc('*', (acc, val) => acc * val)
-
-const divide = calc('/', (acc, val) => acc / val)
+const divide = calc('/', (acc, val) => acc / val);
 
 const evaluate = (str) => {
     if(str.includes('*')){
-        return multiply(str)
+        return multiply(str);
     }
     else if(str.includes('/')){
-        return divide(str)
+        return divide(str);
     }
     else{
-        return add(str)
+        return add(str);
     }
 }
 
-export default (str) => {
-    let exp = extract(str);
+const extract = (str) => str.match(/[\d]+\/[\d]+/g)
 
-    if(!!exp && exp.length > 0) {
-        let value = evaluate(exp[0]).toString();
-        return evaluate(str.replace(exp, value))
+export default (str) => {
+    let expressions = extract(str);
+
+    if(Boolean(expressions)) {
+        str = expressions.reduce((simplifiedStr, curr) => {
+            return simplifiedStr.replace(curr, evaluate(curr).toString());
+        }, str);
     }
 
     return evaluate(str);
 }
-
-
-
