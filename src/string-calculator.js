@@ -22,10 +22,11 @@ const evaluate = (str) => {
     }
 }
 
-const extract = (str) => str.match(/[\d]+\/[\d]+/g)
+const extractDivision = (str) => str.match(/[\d]+\/[\d]+/g)
+const extractMultiplication = (str) => str.match(/[\d]+\*[\d]+/g)
 
 export default (str) => {
-    let expressions = extract(str);
+    let expressions = extractDivision(str) || extractMultiplication(str);
 
     if(Boolean(expressions)) {
         str = expressions.reduce((simplifiedStr, curr) => {

@@ -38,4 +38,8 @@ describe('String Calculator', () => {
     it('should divide numbers and then perform addition', () => {
         expect(calculate('20/5+4/2')).to.be.equal(6)
     })
+
+    it('should multiply two numbers and then subtract a number', () => {
+        expect(calculate('13*5-2')).to.be.equal(63)
+    })
 })
