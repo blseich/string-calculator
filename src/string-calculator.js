@@ -1,6 +1,6 @@
 import { curry } from 'lodash';
 
-const calc = curry((delimeter, combiner, str) => str.split(delimeter)
+const calc = curry((delimeter, combiner, exp) => exp.split(delimeter)
     .map((val) => parseInt((val || '0')) )
     .reduce(combiner));
 
@@ -10,29 +10,39 @@ const multiply = calc('*', (acc, val) => acc * val);
 
 const divide = calc('/', (acc, val) => acc / val);
 
-const evaluate = (str) => {
-    if(str.includes('*')){
-        return multiply(str);
+const evaluate = (exp) => {
+    if(exp.includes('*')){
+        return multiply(exp);
     }
-    else if(str.includes('/')){
-        return divide(str);
+    else if(exp.includes('/')){
+        return divide(exp);
     }
     else{
-        return add(str);
+        return add(exp);
     }
 }
 
-const extractDivision = (str) => str.match(/[\d]+\/[\d]+/g)
-const extractMultiplication = (str) => str.match(/[\d]+\*[\d]+/g)
+const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
+const extractMult = (exp) => exp.match(/[\d]+\*[\d]+/g)
 
-export default (str) => {
-    let expressions = extractDivision(str) || extractMultiplication(str);
+const simplify = (exp, expressions) => {
+    return expressions.reduce((simplifiedExp, curr) => {
+        return simplifiedExp.replace(curr, evaluate(curr).toString());
+    }, exp);
+}
+
+export default (ogExp) => {
+    let expressions = extractDivision(ogExp);
 
     if(Boolean(expressions)) {
-        str = expressions.reduce((simplifiedStr, curr) => {
-            return simplifiedStr.replace(curr, evaluate(curr).toString());
-        }, str);
+        ogExp = simplify(ogExp, expressions);
     }
 
-    return evaluate(str);
+    expressions = extractMult(ogExp);
+
+    if(Boolean(expressions)) {
+        ogExp = simplify(ogExp, expressions);
+    }
+
+    return evaluate(ogExp);
 }

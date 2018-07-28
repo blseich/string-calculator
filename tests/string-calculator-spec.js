@@ -42,4 +42,8 @@ describe('String Calculator', () => {
     it('should multiply two numbers and then subtract a number', () => {
         expect(calculate('13*5-2')).to.be.equal(63)
     })
+
+    it('should multiply, then divide, and then subtract a number', () => {
+        expect(calculate('23*31-72/9')).to.be.equal(705)
+    })
 })
