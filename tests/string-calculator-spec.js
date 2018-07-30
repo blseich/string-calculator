@@ -74,4 +74,8 @@ describe('String Calculator', () => {
     it('should multiply, divide, add and subtract', () => {
         expect(calculate('3*30/5+5-2+100*6/3/2')).to.be.equal(121)
     })
+
+    it('should evaluate massive string', () => {
+        expect(calculate('2341234/2/2*413*30/5+5-2+100*6/3/2+123-235+519438')).to.be.equal(1450913892)
+    })
 })
