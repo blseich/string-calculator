@@ -66,4 +66,12 @@ describe('String Calculator', () => {
     it('should divide then divide and then divide once more', () => {
         expect(calculate('30/3/2/5')).to.be.equal(1)
     })
+
+    it('should multiply then divide then multiply then divide 3 more times', () => {
+        expect(calculate('3*30/5*6/3/2/6')).to.be.equal(3)
+    })
+
+    it('should multiply, divide, add and subtract', () => {
+        expect(calculate('3*30/5+5-2+100*6/3/2')).to.be.equal(121)
+    })
 })

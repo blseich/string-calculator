@@ -23,7 +23,7 @@ const evaluate = (exp) => {
 }
 
 const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
-const extractMult = (exp) => exp.match(/\d+(\.\d+)?\*\d+(\.\d+)?/g)
+const extractMult = (exp) => exp.match(/\d+(\.\d+)?(\*\d+(\.\d+)?)+/g)
 
 const simplify = (exp, expressions) => {
     return expressions.reduce((simplifiedExp, curr) => {
