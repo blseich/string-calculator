@@ -5,9 +5,7 @@ const calc = curry((delimeter, combiner, exp) => exp.split(delimeter)
     .reduce(combiner));
 
 const add = calc(/(?=\+|-)/, (acc, val) => val + acc);
-
 const multiply = calc('*', (acc, val) => acc * val);
-
 const divide = calc('/', (acc, val) => acc / val);
 
 const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
