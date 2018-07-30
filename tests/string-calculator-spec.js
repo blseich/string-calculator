@@ -19,11 +19,11 @@ describe('String Calculator', () => {
         expect(calculate('5-4')).to.be.equal(1)
     })
 
-    it('should add two numbers and subtract a number in the same string', () => {
+    it('should add two numbers and subtract a number', () => {
         expect(calculate('5+4-2')).to.be.equal(7)
     })
 
-    it('should multiply two numbers in the same string', () => {
+    it('should multiply two numbers', () => {
         expect(calculate('4*5')).to.be.equal(20)
     })
 
@@ -33,5 +33,13 @@ describe('String Calculator', () => {
 
     it('should divide and add two numbers', () => {
         expect(calculate('20/5+4')).to.be.equal(8)
+    })
+
+    it('should divide 4 successive numbers first to last', () => {
+        expect(calculate('40/2/5/2')).to.be.equal(2)
+    })
+
+    it('should multiply two numbers and add a number', () => {
+        expect(calculate('4*5+3')).to.be.equal(23)
     })
 })

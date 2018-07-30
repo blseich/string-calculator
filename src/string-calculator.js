@@ -4,7 +4,7 @@ const calc = curry((delimeter, combiner, str) => str.split(delimeter)
     .map((val) => parseInt((val || '0')) )
     .reduce(combiner))
 
-const extract = (str) => str.match(/[\d]+\/[\d]+/g)
+const extract = (str) => str.match(/[\d]+((\/|\*)[\d]+)+/g)
 
 const add = calc(/(?=\+|-)/, (acc, val) => val + acc)
 
@@ -25,12 +25,9 @@ const evaluate = (str) => {
 }
 
 export default (str) => {
-    let exp = extract(str);
+    let exp = extract(str) || [];
 
-    if(!!exp && exp.length > 0) {
-        let value = evaluate(exp[0]).toString();
-        return evaluate(str.replace(exp, value))
-    }
+    exp.forEach((expression) => str = str.replace(expression, evaluate(expression).toString()))
 
     return evaluate(str);
 }
