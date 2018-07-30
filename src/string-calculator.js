@@ -1,7 +1,7 @@
-import { curry } from 'lodash'
-
+import { curry, reduce } from 'lodash'
+import { invertDivs } from './mult-div-utils'
 const calc = curry((delimeter, combiner, str) => str.split(delimeter)
-    .map((val) => parseInt((val || '0')) )
+    .map((val) => parseFloat((val || '0')) )
     .reduce(combiner))
 
 const extract = (str) => str.match(/[\d]+((\/|\*)[\d]+)+/g)
@@ -10,14 +10,9 @@ const add = calc(/(?=\+|-)/, (acc, val) => val + acc)
 
 const multiply = calc('*', (acc, val) => acc * val)
 
-const divide = calc('/', (acc, val) => acc / val)
-
 const evaluate = (str) => {
-    if(str.includes('*')){
-        return multiply(str)
-    }
-    else if(str.includes('/')){
-        return divide(str)
+    if(str.includes('*') || str.includes('/')){
+        return multiply(invertDivs(str))
     }
     else{
         return add(str)
@@ -26,9 +21,11 @@ const evaluate = (str) => {
 
 export default (str) => {
     let exp = extract(str) || [];
-
-    exp.forEach((expression) => str = str.replace(expression, evaluate(expression).toString()))
-
+    str = reduce(
+        exp, 
+        (acc, expression) => acc.replace(expression, evaluate(expression).toString()), 
+        str
+    )
     return evaluate(str);
 }
 

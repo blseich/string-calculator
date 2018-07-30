@@ -42,4 +42,12 @@ describe('String Calculator', () => {
     it('should multiply two numbers and add a number', () => {
         expect(calculate('4*5+3')).to.be.equal(23)
     })
+
+    it('should multiply and divide number in proper sequence', () => {
+        expect(calculate('6*10/3')).to.be.equal(20);
+    })
+
+    it('should return a decimal value', () => {
+        expect(calculate('1/2')).to.be.equal(0.5)
+    })
 })
