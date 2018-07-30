@@ -1,7 +1,7 @@
 import { curry } from 'lodash';
 
 const calc = curry((delimeter, combiner, exp) => exp.split(delimeter)
-    .map((val) => parseInt((val || '0')) )
+    .map((val) => parseFloat((val || '0')) )
     .reduce(combiner));
 
 const add = calc(/(?=\+|-)/, (acc, val) => val + acc);
@@ -23,7 +23,7 @@ const evaluate = (exp) => {
 }
 
 const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
-const extractMult = (exp) => exp.match(/[\d]+\*[\d]+/g)
+const extractMult = (exp) => exp.match(/\d+(\.\d+)?\*\d+(\.\d+)?/g)
 
 const simplify = (exp, expressions) => {
     return expressions.reduce((simplifiedExp, curr) => {
@@ -32,6 +32,7 @@ const simplify = (exp, expressions) => {
 }
 
 export default (ogExp) => {
+    ogExp = ogExp.replace(/\//g, '*1/')
     let expressions = extractDivision(ogExp);
 
     if(Boolean(expressions)) {
@@ -44,5 +45,5 @@ export default (ogExp) => {
         ogExp = simplify(ogExp, expressions);
     }
 
-    return evaluate(ogExp);
+    return Math.round(evaluate(ogExp));
 }

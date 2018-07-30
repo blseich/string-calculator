@@ -46,4 +46,24 @@ describe('String Calculator', () => {
     it('should multiply, then divide, and then subtract a number', () => {
         expect(calculate('23*31-72/9')).to.be.equal(705)
     })
+
+    it('should divide then multiply', () => {
+        expect(calculate('30/3*5')).to.be.equal(50)
+    })
+
+    it('should multiply then divide', () => {
+        expect(calculate('4*30/5')).to.be.equal(24)
+    })
+
+    it('should multiply then divide then multiply', () => {
+        expect(calculate('3*30/5*6')).to.be.equal(108)
+    })
+
+    it('should divide then multiply then divide', () => {
+        expect(calculate('30/3*54/6')).to.be.equal(90)
+    })
+
+    it('should divide then divide and then divide once more', () => {
+        expect(calculate('30/3/2/5')).to.be.equal(1)
+    })
 })
