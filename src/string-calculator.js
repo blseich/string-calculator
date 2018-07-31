@@ -10,6 +10,7 @@ const divide = calc('/', (acc, val) => acc / val)
 
 const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
 const extractMult = (exp) => exp.match(/\d+(\.\d+)?(\*\d+(\.\d+)?)+/g)
+const extractParans = (exp) => exp.match(/\(\d+(\.\d+)?((\*|\/|\+|\-)\d+(\.\d+)?)+\)/g)
 
 const simplify = curry((calculation, exp, expressions) => {
     return expressions.reduce((simplifiedExp, curr) => {
@@ -31,10 +32,23 @@ const evaluate = (exp) => {
     return add(exp)
 }
 
-const replaceDivWithReciprocal = exp => exp.replace(/\//g, '*1/')
 
-export default (ogExp) => {
-    return evaluate(replaceDivWithReciprocal(ogExp))
+const removeParans = (exps) => {
+    return exps.map((curr) => curr.replace(/[()]/g,""))
+}
+const replaceDivWithReciprocal = (exp) => exp.replace(/\//g, '*1/')
+
+const calculate = (ogExp) => {
+    ogExp = replaceDivWithReciprocal(ogExp)
+    if(ogExp.includes('(')){
+        let paranExps = extractParans(ogExp);
+        let removedExps = removeParans(paranExps);
+        ogExp = ogExp.replace(paranExps[0], evaluate(removedExps[0]))
+    }
+        return evaluate(ogExp)
 }
 
-//Extract parantheses statement and simplify that first
+export {
+    calculate,
+    removeParans
+}

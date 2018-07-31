@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import calculate from '../src/string-calculator.js'
+import { calculate } from '../src/string-calculator.js'
 
 describe('String Calculator', () => {
 
@@ -77,5 +77,21 @@ describe('String Calculator', () => {
 
     it('should evaluate massive string', () => {
         expect(calculate('2341234/2/2*413*30/5+5-2+100*6/3/2+123-235+519438')).to.be.equal(1450913892)
+    })
+
+    it('should produce decimal value from simple division', () => {
+        expect(calculate('1/2')).to.be.equal(0.5)
+    })
+
+    it('should produce decimal value from division and multiplication', () => {
+        expect(calculate('1/2*3')).to.be.equal(1.5)
+    })
+
+    it('should produce decimal value from div, mult, and addition', () => {
+        expect(calculate('34+1/4*29')).to.be.equal(41.25)
+    })
+
+    it('should add then multiply', () => {
+        expect(calculate('(3+3)*6')).to.be.equal(36)
     })
 })
