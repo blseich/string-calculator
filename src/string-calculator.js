@@ -10,7 +10,7 @@ const divide = calc('/', (acc, val) => acc / val)
 
 const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
 const extractMult = (exp) => exp.match(/\d+(\.\d+)?(\*\d+(\.\d+)?)+/g)
-const extractParans = (exp) => exp.match(/\(\d+(\.\d+)?((\*|\/|\+|\-)\d+(\.\d+)?)+\)/g)
+const extractParens = (exp) => exp.match(/\(\d+(\.\d+)?((\*|\/|\+|\-)\d+(\.\d+)?)+\)/g)
 
 const simplify = curry((calculation, exp, expressions) => {
     return expressions.reduce((simplifiedExp, curr) => {
@@ -32,23 +32,29 @@ const evaluate = (exp) => {
     return add(exp)
 }
 
-
-const removeParans = (exps) => {
-    return exps.map((curr) => curr.replace(/[()]/g,""))
+const removeParens = (exps) => exps.map((curr) => curr.replace(/[()]/g,""))
+const simplifyParens = (exp, paranExps, removedExps) => {
+    return removedExps.reduce((simplifiedExp, currExp, idx) => {
+        return simplifiedExp.replace(paranExps[idx], evaluate(currExp).toString());
+    }, exp)
 }
+
 const replaceDivWithReciprocal = (exp) => exp.replace(/\//g, '*1/')
 
 const calculate = (ogExp) => {
     ogExp = replaceDivWithReciprocal(ogExp)
     if(ogExp.includes('(')){
-        let paranExps = extractParans(ogExp);
-        let removedExps = removeParans(paranExps);
-        ogExp = ogExp.replace(paranExps[0], evaluate(removedExps[0]))
+        let paranExps = extractParens(ogExp)
+        let removedExps = removeParens(paranExps)
+        ogExp = simplifyParens(ogExp, paranExps, removedExps)
+        ogExp = calculate(ogExp).toString()
     }
-        return evaluate(ogExp)
+    return evaluate(ogExp)
 }
 
 export {
     calculate,
-    removeParans
+    removeParens,
+    extractParens,
+    simplifyParens
 }

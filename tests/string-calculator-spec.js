@@ -94,4 +94,12 @@ describe('String Calculator', () => {
     it('should add then multiply', () => {
         expect(calculate('(3+3)*6')).to.be.equal(36)
     })
+
+    it('should add then subtract and then multiply', () => {
+        expect(calculate('(3+3)*(6-2)')).to.be.equal(24)
+    })
+
+    it('should produce value from complex parentheses expression', () => {
+        expect(calculate('(((3+3)+(6-2))+(234+29))*6')).to.be.equal(1638)
+    })
 })
