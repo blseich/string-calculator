@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { removeParens, extractParens, simplifyParens } from '../src/string-calculator.js'
+import { removeParens, extractParens, replaceParensExpressions } from '../src/string-calculator.js'
 
 describe('Helper Functions for String Calculator', () => {
     it('should return array with expressions with parans removed', () => {
@@ -15,6 +15,6 @@ describe('Helper Functions for String Calculator', () => {
     })
 
     it('should simplify expressions with parans extracted from expression', () => {
-        expect(simplifyParens('(((3+3)+(6-2))-(234+29))*6',['(3+3)','(6-2)','(234+29)'],['6','4','263'])).to.be.eql('((6+4)-263)*6')
+        expect(replaceParensExpressions('(((3+3)+(6-2))-(234+29))*6',['(3+3)','(6-2)','(234+29)'],['6','4','263'])).to.be.eql('((6+4)-263)*6')
     })
 })

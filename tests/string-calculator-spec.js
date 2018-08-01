@@ -100,6 +100,6 @@ describe('String Calculator', () => {
     })
 
     it('should produce value from complex parentheses expression', () => {
-        expect(calculate('(((3+3)+(6-2))+(234+29))*6')).to.be.equal(1638)
+        expect(calculate('(((3+3)+(6-2))-(234+29))*6')).to.be.equal(-1518)
     })
 })

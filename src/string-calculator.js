@@ -12,49 +12,53 @@ const extractDivision = (exp) => exp.match(/[\d]+\/[\d]+/g)
 const extractMult = (exp) => exp.match(/\d+(\.\d+)?(\*\d+(\.\d+)?)+/g)
 const extractParens = (exp) => exp.match(/\(\d+(\.\d+)?((\*|\/|\+|\-)\d+(\.\d+)?)+\)/g)
 
-const simplify = curry((calculation, exp, expressions) => {
+const replaceEvaluatedExpressions = curry((calculation, exp, expressions) => {
     return expressions.reduce((simplifiedExp, curr) => {
         return simplifiedExp.replace(curr, calculation(curr).toString())
     }, exp)
 })
 
+const removeParens = (exps) => exps.map((curr) => curr.replace(/[()]/g,""))
+const replaceParensExpressions = (exp, paranExps, removedExps) => {
+    return removedExps.reduce((simplifiedExp, currExp, idx) => {
+        return simplifiedExp.replace(paranExps[idx], evaluate(currExp).toString());
+    }, exp)
+}
+const simplifyParensExpressions = (exp) => {
+    if(exp.includes('(')){
+        let paranExps = extractParens(exp)
+        let removedExps = removeParens(paranExps)
+        exp = replaceParensExpressions(exp, paranExps, removedExps)
+        exp = simplifyParensExpressions(exp).toString()
+    }
+    return exp;
+}
+
 const evaluate = (exp) => {
+    exp = simplifyParensExpressions(exp)
+
     let expressions = extractDivision(exp)
     if(Boolean(expressions)) {
-        exp = simplify(divide)(exp, expressions)
+        exp = replaceEvaluatedExpressions(divide)(exp, expressions)
     }
 
     expressions = extractMult(exp)
     if(Boolean(expressions)) {
-        exp = simplify(multiply)(exp, expressions)
+        exp = replaceEvaluatedExpressions(multiply)(exp, expressions)
     }
 
     return add(exp)
 }
 
-const removeParens = (exps) => exps.map((curr) => curr.replace(/[()]/g,""))
-const simplifyParens = (exp, paranExps, removedExps) => {
-    return removedExps.reduce((simplifiedExp, currExp, idx) => {
-        return simplifiedExp.replace(paranExps[idx], evaluate(currExp).toString());
-    }, exp)
-}
-
 const replaceDivWithReciprocal = (exp) => exp.replace(/\//g, '*1/')
 
 const calculate = (ogExp) => {
-    ogExp = replaceDivWithReciprocal(ogExp)
-    if(ogExp.includes('(')){
-        let paranExps = extractParens(ogExp)
-        let removedExps = removeParens(paranExps)
-        ogExp = simplifyParens(ogExp, paranExps, removedExps)
-        ogExp = calculate(ogExp).toString()
-    }
-    return evaluate(ogExp)
+    return evaluate(replaceDivWithReciprocal(ogExp))
 }
 
 export {
     calculate,
     removeParens,
     extractParens,
-    simplifyParens
+    replaceParensExpressions
 }
